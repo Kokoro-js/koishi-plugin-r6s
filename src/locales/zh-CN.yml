@@ -1,0 +1,27 @@
+r6rank:
+  description: 查询排位信息
+  usage: |-
+    rank ahdg6 -t xbl
+    查询平台 Xbox 上名为 ahdg6 玩家的战绩
+    绑定后直接 rank 查自己
+  options:
+    platform: 指定平台，默认 uplay，可选的有 [xbl, psn]
+  messages:
+    no-name: '你既没有绑定账号也没指定要看的用户，咱给你查啥啊。'
+    not-found: '未找到任何匹配账户，换个平台看看？'
+r6bind:
+  description: 绑定账户
+  usage: |-
+    bind ahdg6 -t xbl
+    绑定平台 Xbox 上名为 ahdg6 的玩家
+  options:
+    platform: 指定平台，默认 uplay，可选的有 [xbl, psn]
+  messages:
+    no-name: '没有输入有效的名字'
+    not-found: '未找到任何匹配账户，换个平台看看？'
+    not-index: '不是有效的选择项'
+    success: '已成功绑定账号 {0}({1})'
+r6server:
+  description: '查询服务器状态'
+r6pin:
+  description: '将R6服务器状态作为卡片放到当前频道，默认一分钟更新一次'
