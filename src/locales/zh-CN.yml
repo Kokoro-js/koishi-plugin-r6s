@@ -1,7 +1,7 @@
 r6rank:
   description: 查询排位信息
   usage: |-
-    rank ahdg6 -t xbl
+    rank ahdg6 -p xbl
     查询平台 Xbox 上名为 ahdg6 玩家的战绩
     绑定后直接 rank 查自己
   options:
@@ -12,7 +12,7 @@ r6rank:
 r6bind:
   description: 绑定账户
   usage: |-
-    bind ahdg6 -t xbl
+    bind ahdg6 -p xbl
     绑定平台 Xbox 上名为 ahdg6 的玩家
   options:
     platform: 指定平台，默认 uplay，可选的有 [xbl, psn]
@@ -24,4 +24,4 @@ r6bind:
 r6server:
   description: '查询服务器状态'
 r6pin:
-  description: '将R6服务器状态作为卡片放到当前频道，默认一分钟更新一次'
+  description: '将R6服务器状态作为卡片放到当前频道，默认一分钟更新一次(尚未实现，请搭配 koishi-plugin-schedule 使用)'
