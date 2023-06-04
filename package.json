@@ -1,17 +1,24 @@
 {
   "name": "koishi-plugin-r6s",
   "description": "Koishi plugin for Rainbow Six:Siege stuff",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
   "files": [
     "lib",
     "dist"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ahdg6/koishi-plugin-r6s.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ahdg6/koishi-plugin-r6s/issues"
+  },
   "license": "AGPLv3",
   "scripts": {},
   "keywords": [
-    "rainbow",
+    "r6s",
     "r6",
     "game"
   ],
@@ -22,12 +29,12 @@
     "canvas": "^2.11.2",
     "fastest-levenshtein": "^1.0.16",
     "node-cache": "^5.1.2",
-    "r6api.js-next": "^4.5.3"
+    "r6api.js-next": "^4.5.4"
   },
   "dependencies": {
     "canvas": "^2.11.2",
     "fastest-levenshtein": "^1.0.16",
     "node-cache": "^5.1.2",
-    "r6api.js-next": "^4.5.3"
+    "r6api.js-next": "^4.5.4"
   }
 }
