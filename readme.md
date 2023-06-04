@@ -4,6 +4,8 @@
 
 一个 Koishi 插件，用于查询彩虹六号战绩/查询服务器在线状态，在所有平台支持图片渲染，在 Kook 平台有特殊卡片支持
 
+互推: [koishi-plugin-minecraft](https://github.com/ahdg6/koishi-plugin-minecraft)
+
 ### 可用指令
 - r6rank <名称> - 在其他平台渲染图片，在 Kook 渲染卡片
 - r6bind <名称> - 绑定账号，用 userId 存储，名字更改不会影响
