@@ -1,4 +1,4 @@
-import {User, ProfileInfo, Profile, Ranked, Casual, Warmup} from "./types";
+import {User, Profile, Ranked, Casual, Warmup} from "./types";
 
 export function formatYMDHMS(now: Date){
   const year = now.getFullYear();
@@ -98,7 +98,7 @@ export class KookCardTemp {
             "accessory": {
               "type": "button",
               "theme": "primary",
-              "value": `confirm_${user.userId}`,
+              "value": `confirm_${user.userId}_${user.platform}`,
               "click": "return-val",
               "text": {
                 "type": "plain-text",
@@ -112,6 +112,51 @@ export class KookCardTemp {
           }
         ]
       }
+  }
+
+  static FriendCard(user: User, kookName, kookAvast) {
+    return {
+      "type": "card",
+      "size": "lg",
+      "theme": "info",
+      "modules": [
+        {
+          "type": "header",
+          "text": {
+            "type": "plain-text",
+            "content": "好友名片信息"
+          }
+        },
+        {
+          "type": "section",
+          "mode": "left",
+          "accessory": {
+            "type": "image",
+            "src": user.avatars["146"]
+          },
+          "text": {
+            "type": "kmarkdown",
+            "content": `用户名 **${user.username}** 平台 **${user.platform}** \nID：**${user.userId}**`
+          }
+        },
+        {
+          "type": "context",
+          "elements": [
+            {
+              "type": "image",
+              "src": kookAvast,
+              "alt": "",
+              "size": "lg",
+              "circle": true
+            },
+            {
+              "type": "kmarkdown",
+              "content": `绑定账户 ${kookName}`
+            }
+          ]
+        },
+      ]
+    }
   }
   static RankInfoCard(user: User, profile: Profile, ranked: Ranked, s: "online" | "away" | "dnd" | "offline") {
     const status = handleOnlineStatus(s)

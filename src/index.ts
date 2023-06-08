@@ -2,7 +2,7 @@ import {Context, h, Schema} from 'koishi'
 import R6API from 'r6api.js-next';
 import {closest} from "fastest-levenshtein";
 import {rankPicture} from "./util";
-import {ButtonData, CachedData, ProfileInfo, User,} from './types'
+import {ButtonData, CachedData, User,} from './types'
 import {Kook, KookBot,} from '@koishijs/plugin-adapter-kook'
 import {formatYMDHMS, handleServerStatus, KookCardTemp} from "./helper";
 import NodeCache from 'node-cache';
@@ -12,6 +12,7 @@ export const name = 'r6s'
 declare module 'koishi' {
   interface User {
     bindUser: string
+    uPlatform: string
   }
   interface Channel {
     pinMessageId: string
@@ -36,7 +37,8 @@ export function apply(ctx: Context, config: Config) {
   const myCache = new NodeCache({ stdTTL: config.cache, useClones: false });
   ctx.i18n.define('zh', require('./locales/zh-CN.yml'))
   ctx.model.extend('user', {
-    bindUser: 'string'
+    bindUser: 'string',
+    uPlatform: 'string'
   })
   ctx.model.extend('channel', {
     pinMessageId: 'string'
@@ -44,25 +46,23 @@ export function apply(ctx: Context, config: Config) {
 
 
   ctx.command('r6rank [name:string]').option('platform', '-p [platform:string]').option('session', '-s [session:posint]')
-    .userFields(['bindUser'])
+    .userFields(['bindUser', 'uPlatform'])
     .action(async ({session, options}, name) => {
       let platform: any = 'uplay'
       if (options.platform) platform = closest(options.platform, ["uplay", "xbl", "psn"])
       let user;
       if (name == undefined) {
         if (session.user.bindUser) {
+          const platform = session.user.uPlatform as  "uplay" | "xbl" | "psn"
           user = await r6api.findUserById({platform: platform, ids: [session.user.bindUser], isUserIds: true})
         } else {
-          await session.send(session.text('.no-name'))
-          return
+          return session.text('.no-name')
         }
       } else user = await r6api.findUserByUsername({platform: platform, usernames: [name]})
 
-      if (!user[0]) {
-        await session.send(session.text('.not-found'))
-        return
-      }
-      let target : User = user[0]
+      if (!user[0]) return session.text('.not-found')
+
+      const target : User = user[0]
       const [seasonal, status] =
         await Promise.all([profileInfoCache(target.profileId, platform),
           r6api.getUserStatus({userIds: [target.userId]})]);
@@ -79,21 +79,17 @@ export function apply(ctx: Context, config: Config) {
       await session.send(h.image(buffer, 'image/png'))
   })
 
-  ctx.command('r6bind <user:string>').userFields(['bindUser'])
+  ctx.command('r6bind <user:string>').userFields(['bindUser', 'uPlatform'])
     .option('platform', '-p [platform:string]')
     .action(async ({session, options}, user) => {
-      if (user == undefined) {
-        await session.send(session.text('.no-name'))
-        return
-      }
+      if (user == undefined) return session.send(session.text('.no-name'))
       let platform: any = 'uplay'
       if (options.platform) platform = closest(options.platform, ["uplay", "xbl", "psn"])
       const query = await r6api.findUserByUsername({platform: platform, usernames: [user]})
-      if (!query[0]) {
-        await session.send(session.text('.not-found'))
-        return
-      }
-      let target : User = query[0]
+
+      if (!query[0]) return session.text('.not-found')
+
+      const target : User = query[0]
 
       if (session.platform == 'kook') {
         await session.kook.createMessage({
@@ -105,6 +101,7 @@ export function apply(ctx: Context, config: Config) {
         return
       }
       session.user.bindUser = target.userId
+      session.user.uPlatform = target.platform
       await session.send(session.text('.success', [target.username, target.userId]))
     });
 
@@ -113,6 +110,23 @@ export function apply(ctx: Context, config: Config) {
       const status = await r6api.getServiceStatus()
       const result = await handleServerStatus(status)
       await session.send(h('message', result.join('\n')))
+  })
+
+  ctx.platform('kook').command('friend').userFields(['bindUser', 'uPlatform'])
+    .action(async ({session}) => {
+      if (!session.user.bindUser) return session.text('.no-account')
+
+      const platform = session.user.uPlatform as  "uplay" | "xbl" | "psn"
+      const user = await r6api.findUserById({platform: platform, ids: [session.user.bindUser], isUserIds: true})
+      if (!user[0]) return session.text('.not-found')
+      const kookUser = await session.kook.getUserView({user_id: session.userId})
+      const target : User = user[0]
+      await session.kook.createMessage({
+        type: Kook.Type.card,
+        content: JSON.stringify([KookCardTemp.FriendCard(target, kookUser.username, kookUser.avatar)]),
+        target_id: session.channelId
+      })
+      await session.kook.deleteMessage({msg_id: session.messageId})
   })
 
   ctx.platform('kook').command('r6pin').channelFields(['pinMessageId'])
@@ -144,8 +158,8 @@ export function apply(ctx: Context, config: Config) {
 
   ctx.on('kook/message-btn-click', async (session) => {
     if (session.content.startsWith('confirm')) {
-      const match = session.content.match(/confirm_(.*)/)
-      await session.getUser().then(s => s.bindUser = match[1])
+      const match = session.content.match(/confirm_(.*)_(.*)/)
+      await ctx.database.setUser(session.platform, session.userId, {bindUser: match[1], uPlatform: match[2]})
       await session.kook.createMessage({target_id: session.targetId, content: '绑定成功', temp_target_id: session.userId})
       return
     }
