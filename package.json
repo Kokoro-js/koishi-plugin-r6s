@@ -1,7 +1,7 @@
 {
   "name": "koishi-plugin-r6s",
   "description": "Koishi plugin for Rainbow Six : Siege stuff",
-  "version": "0.0.3",
+  "version": "0.1.1",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
   "files": [
@@ -15,7 +15,7 @@
   "bugs": {
     "url": "https://github.com/ahdg6/koishi-plugin-r6s/issues"
   },
-  "license": "AGPLv3",
+  "license": "AGPL-3.0",
   "scripts": {},
   "keywords": [
     "r6s",
