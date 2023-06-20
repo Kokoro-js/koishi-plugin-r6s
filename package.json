@@ -1,7 +1,7 @@
 {
   "name": "koishi-plugin-r6s",
   "description": "Koishi plugin for Rainbow Six : Siege stuff",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
   "files": [
