@@ -1,12 +1,13 @@
 import {Context, h, Schema} from 'koishi'
 import R6API from 'r6api.js-next';
-import {closest} from "fastest-levenshtein";
+import {GlobalFonts} from "@napi-rs/canvas";
 import {rankPicture} from "./util";
 import {ButtonData, CachedData, User,} from './types'
 import {Kook, KookBot,} from '@koishijs/plugin-adapter-kook'
 import {formatYMDHMS, handleServerStatus, KookCardTemp} from "./helper";
 import NodeCache from 'node-cache';
 import FormData from 'form-data'
+import path from "path";
 
 export const name = 'r6s'
 declare module 'koishi' {
@@ -28,7 +29,7 @@ export interface Config {
 export const Config: Schema<Config> = Schema.object({
   email: Schema.string().required().description('UBI 邮箱'),
   password: Schema.string().required().description('UBI 密码'),
-  cache: Schema.natural().required().description('获取账户信息后的缓存时长').default(300)
+  cache: Schema.natural().description('获取账户信息后的缓存时长').default(300)
 })
 
 export function apply(ctx: Context, config: Config) {
@@ -44,6 +45,7 @@ export function apply(ctx: Context, config: Config) {
     pinMessageId: 'string'
   })
 
+  console.log('Loaded Font : ' + GlobalFonts.registerFromPath(path.join(__dirname, 'assets', 'LXGWWenKaiLite-Regular.ttf'), 'LXGWWenKaiLite'))
 
   ctx.command('r6rank [name:string]')    .option('xbox', '-x')
     .option('psn', '-p')

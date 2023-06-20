@@ -1,4 +1,4 @@
-import {createCanvas, loadImage} from "@napi-rs/canvas";
+import {createCanvas, GlobalFonts, loadImage} from "@napi-rs/canvas";
 import path from "path";
 import {User, Ranked, Profile} from "./types";
 
@@ -38,9 +38,9 @@ export async function rankPicture(target: User, profile: Profile, rankInfo: Rank
       context.fillRect(25, 300, 300, 80); // Increased height for better visibility and repositioned closer to the middle rectangles
       const gradient = context.createLinearGradient(0, 0, canvas.width, 0);
       gradient.addColorStop(0, 'white');
-      gradient.addColorStop(1, 'blue');
+      gradient.addColorStop(1, 'cyan');
       context.fillStyle = gradient;
-      context.font = `20px Sans`;
+      context.font = `20px LXGWWenKaiLite`;
       context.fillText(`${target.username} (${target.platform})`, 110, 50);
       context.fillText(`等级：${profile.level}`, 110, 80);
       switch (status) {
