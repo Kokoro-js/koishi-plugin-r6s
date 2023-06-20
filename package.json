@@ -1,7 +1,7 @@
 {
   "name": "koishi-plugin-r6s",
   "description": "Koishi plugin for Rainbow Six : Siege stuff",
-  "version": "0.1.1",
+  "version": "0.2.2",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
   "files": [
@@ -27,17 +27,11 @@
   },
   "koishi": {
     "description": {
-      "zh": "支持图片渲染/Kook 卡片，由于使用 node-canvas，很大且在部分平台需要编译安装(ARM)，不能保证开箱即用"
+      "zh": "支持图片渲染/Kook 卡片"
     }
   },
-  "devDependencies": {
-    "canvas": "^2.11.2",
-    "fastest-levenshtein": "^1.0.16",
-    "node-cache": "^5.1.2",
-    "r6api.js-next": "^4.5.4"
-  },
   "dependencies": {
-    "canvas": "^2.11.2",
+    "@napi-rs/canvas": "^0.1.41",
     "fastest-levenshtein": "^1.0.16",
     "node-cache": "^5.1.2",
     "r6api.js-next": "^4.5.4"

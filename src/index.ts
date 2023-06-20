@@ -26,16 +26,16 @@ export interface Config {
   cache: number;
 }
 export const Config: Schema<Config> = Schema.object({
-  email: Schema.string().description('UBI 邮箱'),
-  password: Schema.string().description('UBI 密码'),
-  cache: Schema.natural().description('获取账户信息后的缓存时长').default(300)
+  email: Schema.string().required().description('UBI 邮箱'),
+  password: Schema.string().required().description('UBI 密码'),
+  cache: Schema.natural().required().description('获取账户信息后的缓存时长').default(300)
 })
 
 export function apply(ctx: Context, config: Config) {
   const { UBI_EMAIL: email = config.email, UBI_PASSWORD: password = config.password } = process.env;
   const r6api = new R6API({ email, password, ubiAppId: 'e3d5ea9e-50bd-43b7-88bf-39794f4e3d40' });
   const myCache = new NodeCache({ stdTTL: config.cache, useClones: false });
-  ctx.i18n.define('zh', require('./locales/zh-CN.yml'))
+  ctx.i18n.define('zh', require('./locales/zh-CN'))
   ctx.model.extend('user', {
     bindUser: 'string',
     uPlatform: 'string'
@@ -45,11 +45,14 @@ export function apply(ctx: Context, config: Config) {
   })
 
 
-  ctx.command('r6rank [name:string]').option('platform', '-p [platform:string]').option('session', '-s [session:posint]')
+  ctx.command('r6rank [name:string]')    .option('xbox', '-x')
+    .option('psn', '-p')
+    .option('session', '-s [session:posint]')
     .userFields(['bindUser', 'uPlatform'])
     .action(async ({session, options}, name) => {
       let platform: any = 'uplay'
-      if (options.platform) platform = closest(options.platform, ["uplay", "xbl", "psn"])
+      if (options.xbox) platform = 'xbl'
+      if (options.psn) platform = 'psn'
       let user;
       if (name == undefined) {
         if (session.user.bindUser) {
@@ -80,11 +83,13 @@ export function apply(ctx: Context, config: Config) {
   })
 
   ctx.command('r6bind <user:string>').userFields(['bindUser', 'uPlatform'])
-    .option('platform', '-p [platform:string]')
+    .option('xbox', '-x')
+    .option('psn', '-p')
     .action(async ({session, options}, user) => {
       if (user == undefined) return session.send(session.text('.no-name'))
       let platform: any = 'uplay'
-      if (options.platform) platform = closest(options.platform, ["uplay", "xbl", "psn"])
+      if (options.xbox) platform = 'xbl'
+      if (options.psn) platform = 'psn'
       const query = await r6api.findUserByUsername({platform: platform, usernames: [user]})
 
       if (!query[0]) return session.text('.not-found')
