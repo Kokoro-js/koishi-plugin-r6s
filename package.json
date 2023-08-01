@@ -1,7 +1,7 @@
 {
   "name": "koishi-plugin-r6s",
-  "description": "Koishi plugin for Rainbow Six : Siege stuff",
-  "version": "0.2.3",
+  "description": "R6S account stats lookup",
+  "version": "0.3.0",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
   "files": [
@@ -16,22 +16,21 @@
     "url": "https://github.com/ahdg6/koishi-plugin-r6s/issues"
   },
   "license": "AGPL-3.0",
-  "scripts": {},
   "keywords": [
     "r6s",
     "r6",
     "game"
   ],
   "peerDependencies": {
-    "koishi": "^4.12.9"
+    "koishi": "^4.12.9",
+    "koishi-plugin-skia-canvas": "^0.1.0"
   },
   "koishi": {
     "description": {
-      "zh": "支持图片渲染/Kook 卡片"
+      "zh": "R6S 战绩和服务器查询，支持图片渲染/Kook 卡片"
     }
   },
   "dependencies": {
-    "@napi-rs/canvas": "^0.1.41",
     "fastest-levenshtein": "^1.0.16",
     "node-cache": "^5.1.2",
     "r6api.js-next": "^4.5.4"
